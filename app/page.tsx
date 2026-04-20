@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Camera, Bell, Lock, Phone, MapPin, Shield, Mail, Moon, Sun, CheckCircle } from 'lucide-react';
+import { Camera, Bell, Lock, Phone, MapPin, Shield, Mail, Moon, Sun, CheckCircle, Users, Award, Zap } from 'lucide-react';
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
@@ -9,9 +9,12 @@ const supabase = createClient(
 );
 
 export default function SafranSeguridad() {
-  const [darkMode, setDarkMode] = useState(false);
   const [loading, setLoading] = useState(false);
   const [enviado, setEnviado] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+
+  // Alternar Modo Oscuro
+  const toggleTheme = () => setDarkMode(!darkMode);
 
   useEffect(() => {
     if (darkMode) {
@@ -36,75 +39,110 @@ export default function SafranSeguridad() {
     if (!error) setEnviado(true);
   }
 
+  const inputStyle = "w-full p-4 rounded-xl border bg-white dark:bg-slate-800 text-slate-900 dark:text-white border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-blue-500 outline-none transition-all";
+
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-900 transition-colors">
-      {/* Barra Navegación */}
-      <nav className="p-6 flex justify-between items-center border-b dark:border-slate-800">
-        <h1 className="text-2xl font-bold text-blue-600">SAFRAN SEGURIDAD</h1>
-        <button onClick={() => setDarkMode(!darkMode)} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
-          {darkMode ? <Sun className="text-orange-400" /> : <Moon className="text-slate-600" />}
-        </button>
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300 font-sans">
+      
+      {/* Navbar */}
+      <nav className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b dark:border-slate-800 p-4 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <h1 className="text-2xl font-black text-blue-700 dark:text-blue-400">SAFRAN <span className="font-light text-slate-500">SEGURIDAD</span></h1>
+          <div className="flex items-center gap-4">
+            <button onClick={toggleTheme} className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 border dark:border-slate-700">
+              {darkMode ? <Sun className="text-orange-400" /> : <Moon className="text-slate-500" />}
+            </button>
+            <a href="#contacto" className="hidden md:block bg-blue-600 text-white px-5 py-2 rounded-lg font-bold">Contacto</a>
+          </div>
+        </div>
       </nav>
 
       {/* Hero */}
-      <header className="py-20 px-6 text-center bg-slate-50 dark:bg-slate-900/50">
-        <Shield className="w-16 h-16 mx-auto mb-6 text-blue-600" />
-        <h2 className="text-4xl md:text-6xl font-extrabold mb-4">Seguridad en la que podés confiar</h2>
-        <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto italic">
-          "Tu tranquilidad y la de tu familia es nuestra máxima prioridad."
-        </p>
+      <header className="bg-gradient-to-b from-blue-900 to-blue-800 dark:from-slate-900 dark:to-slate-950 text-white py-24 px-4 text-center">
+        <Shield className="w-16 h-16 mx-auto mb-6 text-blue-400" />
+        <h2 className="text-5xl font-bold mb-4 tracking-tight">Tu tranquilidad es nuestro compromiso.</h2>
+        <p className="text-xl opacity-80 max-w-2xl mx-auto">Sistemas de seguridad avanzada con soporte técnico especializado en toda la región.</p>
       </header>
 
-      {/* Servicios */}
-      <section className="py-16 max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8 text-center">
-        <div className="p-8 border rounded-2xl dark:border-slate-800">
-          <Camera className="mx-auto mb-4 text-blue-600" size={40} />
-          <h3 className="text-xl font-bold mb-2">Cámaras</h3>
-          <p className="text-slate-500">Monitoreo IP 24hs desde tu celular.</p>
-        </div>
-        <div className="p-8 border rounded-2xl dark:border-slate-800">
-          <Bell className="mx-auto mb-4 text-blue-600" size={40} />
-          <h3 className="text-xl font-bold mb-2">Alarmas</h3>
-          <p className="text-slate-500">Sistemas inteligentes anti-entradera.</p>
-        </div>
-        <div className="p-8 border rounded-2xl dark:border-slate-800">
-          <Lock className="mx-auto mb-4 text-blue-600" size={40} />
-          <h3 className="text-xl font-bold mb-2">Accesos</h3>
-          <p className="text-slate-500">Control de entradas para PyMEs.</p>
+      {/* SECCIÓN: ACERCA DE NOSOTROS */}
+      <section className="py-20 max-w-6xl mx-auto px-4">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <h3 className="text-3xl font-bold mb-6 text-blue-700 dark:text-blue-400">Protegiendo lo que más valorás</h3>
+            <p className="text-lg leading-relaxed text-slate-600 dark:text-slate-300 mb-6">
+              En <strong>Safran Seguridad</strong>, no solo instalamos dispositivos; diseñamos ecosistemas de protección integral. Con años de experiencia en el sector tecnológico, entendemos que la seguridad es la base de la libertad.
+            </p>
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <Award className="text-blue-600 mt-1" />
+                <div><strong>Profesionalismo:</strong> Técnicos certificados y materiales de primera línea (Hikvision, Dahua, Garnet).</div>
+              </div>
+              <div className="flex items-start gap-3">
+                <Users className="text-blue-600 mt-1" />
+                <div><strong>Cercanía:</strong> Atención personalizada y respuesta rápida ante cualquier incidencia.</div>
+              </div>
+            </div>
+          </div>
+          <div className="bg-blue-600/10 dark:bg-blue-400/5 p-8 rounded-3xl border border-blue-200 dark:border-blue-900">
+            <h4 className="text-2xl font-bold mb-4">¿Por qué elegirnos?</h4>
+            <ul className="space-y-4">
+              <li className="flex gap-2 items-center"><Zap className="text-orange-500"/> Instalaciones limpias y configuraciones seguras.</li>
+              <li className="flex gap-2 items-center"><Zap className="text-orange-500"/> Monitoreo real desde tu smartphone.</li>
+              <li className="flex gap-2 items-center"><Zap className="text-orange-500"/> Asesoramiento técnico sin cargo.</li>
+            </ul>
+          </div>
         </div>
       </section>
 
-      {/* Acerca de Nosotros */}
-      <section className="py-20 px-6 max-w-4xl mx-auto text-center">
-        <h3 className="text-3xl font-bold mb-6">Sobre Nosotros</h3>
-        <p className="text-lg leading-relaxed text-slate-600 dark:text-slate-400">
-          En Safran Seguridad contamos con años de experiencia instalando confianza en Buenos Aires. 
-          Somos especialistas técnicos que entendemos que no solo instalamos cámaras, sino que 
-          brindamos tranquilidad a hogares y empresas argentinas con soluciones de última generación.
-        </p>
+      {/* SECCIÓN: BLOG (PREVIEW) */}
+      <section className="py-20 bg-slate-100 dark:bg-slate-900/50">
+        <div className="max-w-7xl mx-auto px-4">
+          <h3 className="text-3xl font-bold text-center mb-12">Blog de Seguridad & Tecnología</h3>
+          <div className="grid md:grid-cols-3 gap-8">
+            <BlogCard 
+              date="20 Abr 2024" 
+              title="5 Claves para asegurar tu PyME en Argentina"
+              excerpt="Analizamos los puntos vulnerables más comunes y cómo cubrirlos con tecnología IP."
+            />
+            <BlogCard 
+              date="15 Abr 2024" 
+              title="Cámaras con IA: Detección Humana"
+              excerpt="Evitá falsas alarmas. Conocé cómo la inteligencia artificial filtra mascotas y sombras."
+            />
+            <BlogCard 
+              date="10 Abr 2024" 
+              title="Ley de Videovigilancia"
+              excerpt="Todo lo que tenés que saber sobre la privacidad y el uso de cámaras en la vía pública."
+            />
+          </div>
+        </div>
       </section>
 
-      {/* Formulario */}
-      <section id="contacto" className="py-20 px-6 bg-blue-600 dark:bg-blue-800 text-white">
-        <div className="max-w-xl mx-auto bg-white dark:bg-slate-900 p-8 rounded-3xl text-slate-900 dark:text-white shadow-2xl">
-          <h3 className="text-2xl font-bold mb-6 text-center">Pedí tu cotización</h3>
+      {/* FORMULARIO */}
+      <section id="contacto" className="py-24 px-4">
+        <div className="max-w-2xl mx-auto bg-white dark:bg-slate-800 p-10 rounded-3xl shadow-2xl border dark:border-slate-700">
+          <h3 className="text-3xl font-bold mb-8 text-center">Consultanos sin compromiso</h3>
           {enviado ? (
-            <div className="text-center py-10">
-              <CheckCircle className="mx-auto mb-4 text-green-500" size={48} />
-              <p className="font-bold text-xl">¡Recibido! Te contactaremos.</p>
+            <div className="text-center p-8 bg-green-50 dark:bg-green-900/20 rounded-2xl">
+              <CheckCircle className="w-16 h-16 mx-auto mb-4 text-green-500" />
+              <p className="text-xl font-bold text-green-800 dark:text-green-400">¡Mensaje enviado!</p>
+              <p>Un asesor de Safran Seguridad te contactará por WhatsApp.</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              <input name="nombre" required placeholder="Nombre o Empresa" className="p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700" />
-              <input name="whatsapp" required placeholder="WhatsApp" className="p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700" />
-              <input name="email" type="email" required placeholder="Email" className="p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700" />
-              <select name="servicio" className="p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700">
-                <option>Cámaras</option>
-                <option>Alarmas</option>
-                <option>Control de Acceso</option>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input name="nombre" required placeholder="Tu nombre o empresa" className={inputStyle} />
+              <div className="grid md:grid-cols-2 gap-4">
+                <input name="whatsapp" required placeholder="WhatsApp" className={inputStyle} />
+                <input name="email" type="email" required placeholder="Email" className={inputStyle} />
+              </div>
+              <select name="servicio" className={inputStyle} required>
+                <option value="">Seleccioná un servicio...</option>
+                <option value="camaras">Cámaras de Seguridad</option>
+                <option value="alarma">Alarmas Monitoreadas</option>
+                <option value="accesos">Control de Accesos</option>
               </select>
-              <textarea name="mensaje" placeholder="Tu consulta..." className="p-3 border rounded-lg dark:bg-slate-800 dark:border-slate-700 h-24" />
-              <button disabled={loading} className="bg-blue-600 text-white p-4 rounded-lg font-bold hover:bg-blue-700">
+              <textarea name="mensaje" placeholder="¿En qué podemos ayudarte?" rows={4} className={inputStyle}></textarea>
+              <button type="submit" disabled={loading} className="w-full bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-xl font-bold text-lg shadow-lg shadow-blue-500/20">
                 {loading ? 'Enviando...' : 'Enviar Solicitud'}
               </button>
             </form>
@@ -112,9 +150,20 @@ export default function SafranSeguridad() {
         </div>
       </section>
 
-      <footer className="py-10 text-center text-slate-400 text-sm">
-        <p>Safran Seguridad | Argentina | 11-XXXX-XXXX</p>
+      <footer className="py-10 text-center text-slate-500 border-t dark:border-slate-800">
+        <p>© 2024 Safran Seguridad - Tecnología y Protección.</p>
       </footer>
+    </div>
+  );
+}
+
+function BlogCard({ date, title, excerpt }: { date: string, title: string, excerpt: string }) {
+  return (
+    <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-md border dark:border-slate-700 hover:border-blue-500 transition-all">
+      <span className="text-sm text-blue-600 dark:text-blue-400 font-bold">{date}</span>
+      <h4 className="text-xl font-bold my-3">{title}</h4>
+      <p className="text-slate-600 dark:text-slate-400 text-sm mb-4">{excerpt}</p>
+      <button className="text-blue-600 font-bold hover:underline">Leer más →</button>
     </div>
   );
 }

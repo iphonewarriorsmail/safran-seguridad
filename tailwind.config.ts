@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
-const config: Config {
-  // 1. ACTIVAR EL MODO OSCURO POR CLASE
+const config: Config = {
+  // ACTIVAR EL MODO OSCURO POR CLASE
   darkMode: 'class', 
   
   content: [

@@ -7,19 +7,13 @@
   --foreground: #171717;
 }
 
-/* Esto asegura que el cambio de color sea suave */
-html {
-  scroll-behavior: smooth;
-  transition: background-color 0.3s ease;
-}
-
 .dark {
-  --background: #020617;
-  --foreground: #ededed;
+  --background: #0f172a;
+  --foreground: #f8fafc;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
+  font-family: sans-serif;
 }
-

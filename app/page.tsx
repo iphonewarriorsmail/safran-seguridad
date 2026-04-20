@@ -1,134 +1,98 @@
-import React from 'react';
-import { Shield, Camera, Bell, Lock, Mail, Phone, MapPin, CheckCircle } from 'lucide-react';
+"use client"; // Necesario para que el formulario funcione
+import React, { useState } from 'react';
+import { Camera, Bell, Lock, Phone, MapPin, Shield } from 'lucide-react';
+import { createClient } from '@supabase/supabase-js';
+
+// Configuración de Supabase
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export default function SafranSeguridad() {
+  const [loading, setLoading] = useState(false);
+  const [enviado, setEnviado] = useState(false);
+
+  async function handleSubmit(e: any) {
+    e.preventDefault();
+    setLoading(true);
+    
+    const formData = new FormData(e.target);
+    const { error } = await supabase.from('leads').insert([{
+      nombre: formData.get('nombre'),
+      whatsapp: formData.get('whatsapp'),
+      servicio: formData.get('servicio'),
+    }]);
+
+    setLoading(false);
+    if (!error) setEnviado(true);
+  }
+
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
-      {/* Header / Navbar */}
-      <nav className="bg-white border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-blue-700">SAFRAN <span className="text-slate-500">SEGURIDAD</span></h1>
-          <div className="hidden md:flex space-x-6 font-medium">
-            <a href="#servicios" className="hover:text-blue-600">Servicios</a>
-            <a href="#blog" className="hover:text-blue-600">Blog</a>
-            <a href="#contacto" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Cotizar Ahora</a>
-          </div>
-        </div>
+    <div className="min-h-screen bg-slate-50 text-slate-900">
+      {/* Navbar simplificado */}
+      <nav className="bg-white border-b p-4 flex justify-between items-center sticky top-0 z-50">
+        <h1 className="text-2xl font-bold text-blue-700">SAFRAN SEGURIDAD</h1>
+        <a href="#contacto" className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold">Cotizar</a>
       </nav>
 
-      {/* Hero Section */}
-      <header className="bg-blue-900 text-white py-20 px-4">
-        <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-4xl md:text-6xl font-extrabold mb-6">Protección Inteligente para tu Hogar y PyME</h2>
-          <p className="text-xl text-blue-100 mb-8">Instalación de cámaras, alarmas y control de accesos con tecnología de última generación en toda Argentina.</p>
-          <div className="flex flex-col md:flex-row justify-center gap-4">
-            <a href="#contacto" className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-lg transition">Solicitar Presupuesto</a>
-            <a href="https://wa.me/54911XXXXXXXX" className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl text-lg font-bold shadow-lg transition flex items-center justify-center">
-              WhatsApp Ventas
-            </a>
-          </div>
-        </div>
+      {/* Hero */}
+      <header className="bg-blue-900 text-white py-16 px-4 text-center">
+        <Shield className="w-16 h-16 mx-auto mb-4 text-orange-400" />
+        <h2 className="text-4xl font-bold mb-4">Seguridad Profesional en Argentina</h2>
+        <p className="text-xl opacity-90">Cámaras, Alarmas y Control de Accesos para Hogar y PyME.</p>
       </header>
 
-      {/* Servicios Section */}
-      <section id="servicios" className="py-20 max-w-7xl mx-auto px-4">
-        <h3 className="text-3xl font-bold text-center mb-16">Nuestras Soluciones de Seguridad</h3>
-        <div className="grid md:grid-cols-3 gap-8">
-          <ServiceCard 
-            icon={<Camera className="w-12 h-12 text-blue-600" />}
-            title="Cámaras de Seguridad"
-            desc="Sistemas IP y Analógicos. Visualización en vivo desde tu celular 24/7."
-          />
-          <ServiceCard 
-            icon={<Bell className="w-12 h-12 text-blue-600" />}
-            title="Alarmas Monitoreadas"
-            desc="Sistemas anti-entradera con sensores de movimiento y rotura de cristales."
-          />
-          <ServiceCard 
-            icon={<Lock className="w-12 h-12 text-blue-600" />}
-            title="Control de Accesos"
-            desc="Biometría y tarjetas magnéticas para consorcios y oficinas."
-          />
+      {/* Servicios */}
+      <section className="py-16 max-w-6xl mx-auto px-4 grid md:grid-cols-3 gap-8">
+        <div className="bg-white p-6 rounded-xl shadow-sm border text-center">
+          <Camera className="w-12 h-12 mx-auto text-blue-600 mb-4" />
+          <h3 className="font-bold text-xl">Cámaras IP</h3>
+          <p className="text-slate-600">Visualización remota Hikvision/Dahua.</p>
+        </div>
+        <div className="bg-white p-6 rounded-xl shadow-sm border text-center">
+          <Bell className="w-12 h-12 mx-auto text-blue-600 mb-4" />
+          <h3 className="font-bold text-xl">Alarmas</h3>
+          <p className="text-slate-600">Sistemas Garnet con aviso al celular.</p>
+        </div>
+        <div className="bg-white p-6 rounded-xl shadow-sm border text-center">
+          <Lock className="w-12 h-12 mx-auto text-blue-600 mb-4" />
+          <h3 className="font-bold text-xl">Accesos</h3>
+          <p className="text-slate-600">Cerraduras inteligentes y biometría.</p>
         </div>
       </section>
 
-      {/* Blog / Noticias Section */}
-      <section id="blog" className="bg-slate-100 py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <h3 className="text-3xl font-bold mb-12">Seguridad Informativa</h3>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <span className="text-blue-600 font-bold text-sm">NOTICIAS ARGENTINA</span>
-              <h4 className="text-xl font-bold mt-2">Nueva Ley de Economía del Conocimiento: Impacto en Tecnología</h4>
-              <p className="text-slate-600 mt-4">Cómo las nuevas regulaciones facilitan la importación de insumos de seguridad electrónica...</p>
-              <button className="mt-4 text-blue-600 font-semibold underline">Leer más</button>
+      {/* Formulario de Leads */}
+      <section id="contacto" className="py-16 bg-slate-100 px-4">
+        <div className="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-lg">
+          <h3 className="text-2xl font-bold mb-6 text-center">Presupuesto Online</h3>
+          {enviado ? (
+            <div className="bg-green-100 text-green-700 p-4 rounded-lg text-center font-bold">
+              ¡Recibido! Te contactaremos por WhatsApp pronto.
             </div>
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <span className="text-blue-600 font-bold text-sm">GUÍA TÉCNICA</span>
-              <h4 className="text-xl font-bold mt-2">Cámaras 4K vs 1080p: ¿Cuál elegir para tu local?</h4>
-              <p className="text-slate-600 mt-4">Analizamos costo-beneficio de las marcas Hikvision y Dahua para el mercado local...</p>
-              <button className="mt-4 text-blue-600 font-semibold underline">Leer más</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Formulario / Backend simulado */}
-      <section id="contacto" className="py-20 px-4 max-w-3xl mx-auto">
-        <div className="bg-white p-8 rounded-2xl shadow-2xl border">
-          <h3 className="text-2xl font-bold mb-6">Pedí tu Cotización Sin Cargo</h3>
-          <form className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Nombre Completo / Empresa</label>
-              <input type="text" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Juan Pérez" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">WhatsApp</label>
-              <input type="tel" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="11 1234 5678" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Tipo de Servicio</label>
-              <select className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-                <option>Residencial (Casa/Dpto)</option>
-                <option>PyME (Local/Oficina)</option>
-                <option>Consorcio (Edificio)</option>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input name="nombre" required placeholder="Tu Nombre o Empresa" className="w-full p-3 border rounded-lg" />
+              <input name="whatsapp" required placeholder="Tu WhatsApp (ej: 1122334455)" className="w-full p-3 border rounded-lg" />
+              <select name="servicio" className="w-full p-3 border rounded-lg">
+                <option>Instalación de Cámaras</option>
+                <option>Alarma Residencial</option>
+                <option>Control de Accesos</option>
               </select>
-            </div>
-            <button type="submit" className="w-full bg-blue-600 text-white p-4 rounded-lg font-bold text-lg hover:bg-blue-700 transition">
-              Enviar Solicitud
-            </button>
-          </form>
+              <button disabled={loading} className="w-full bg-blue-600 text-white p-4 rounded-lg font-bold hover:bg-blue-700">
+                {loading ? 'Enviando...' : 'Solicitar Información'}
+              </button>
+            </form>
+          )}
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-slate-900 text-slate-400 py-12 px-4">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
-          <div>
-            <h4 className="text-white font-bold mb-4">SAFRAN SEGURIDAD</h4>
-            <p>Especialistas en seguridad electrónica en Argentina.</p>
-          </div>
-          <div>
-            <h4 className="text-white font-bold mb-4">Contacto</h4>
-            <div className="flex items-center space-x-2 mb-2"><Phone size={16}/> <span>+54 9 11 XXXX-XXXX</span></div>
-            <div className="flex items-center space-x-2"><MapPin size={16}/> <span>Buenos Aires, Argentina</span></div>
-          </div>
-          <div>
-            <h4 className="text-white font-bold mb-4">Legal</h4>
-            <p className="text-sm">CUIT: En trámite (Monotributo Cat. A)</p>
-          </div>
+      <footer className="bg-slate-900 text-white py-10 text-center">
+        <div className="flex justify-center space-x-4 mb-4">
+          <Phone size={20} /> <span>Consultas Técnicas: 11-XXXX-XXXX</span>
         </div>
+        <p className="text-slate-500 text-sm">© 2024 Safran Seguridad - Argentina</p>
       </footer>
-    </div>
-  );
-}
-
-function ServiceCard({ icon, title, desc }: { icon: React.ReactNode, title: string, desc: string }) {
-  return (
-    <div className="bg-white p-8 rounded-2xl shadow-sm border hover:shadow-md transition">
-      <div className="mb-4">{icon}</div>
-      <h4 className="text-xl font-bold mb-2">{title}</h4>
-      <p className="text-slate-600">{desc}</p>
     </div>
   );
 }

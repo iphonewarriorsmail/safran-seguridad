@@ -112,4 +112,41 @@ export default function SafranSeguridad() {
               </div>
               <input name="email" type="email" required placeholder="Email de contacto" className={inputStyle} />
               <select name="servicio" className={inputStyle} required>
-                <option value="">Sele
+                <option value="">Seleccioná un servicio...</option>
+                <option value="camaras">Instalación de Cámaras</option>
+                <option value="alarma">Alarma Residencial/Comercial</option>
+                <option value="accesos">Control de Accesos</option>
+              </select>
+              <textarea name="mensaje" placeholder="Detalles adicionales (opcional)" rows={4} className={inputStyle}></textarea>
+              <button 
+                type="submit" 
+                disabled={loading} 
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-xl font-bold text-lg transition-all"
+              >
+                {loading ? 'Enviando...' : 'Enviar Solicitud'}
+              </button>
+            </form>
+          )}
+        </div>
+      </section>
+
+      <footer className="bg-slate-950 text-white py-12 px-4 text-center border-t border-slate-800">
+        <p className="text-slate-400 mb-4">© 2024 Safran Seguridad | Buenos Aires, Argentina</p>
+        <div className="flex justify-center gap-6 text-sm text-slate-500">
+          <span className="flex items-center gap-1"><Phone size={14}/> 11-XXXX-XXXX</span>
+          <span className="flex items-center gap-1"><Mail size={14}/> info@safranseguridad.com.ar</span>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+function ServiceCard({ icon, title, desc }: { icon: React.ReactNode, title: string, desc: string }) {
+  return (
+    <div className="bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-lg border border-slate-100 dark:border-slate-700 text-center hover:scale-105 transition-transform">
+      <div className="mb-4 flex justify-center">{icon}</div>
+      <h4 className="text-xl font-bold mb-2">{title}</h4>
+      <p className="text-slate-600 dark:text-slate-400 font-light">{desc}</p>
+    </div>
+  );
+}

@@ -1,32 +1,38 @@
 "use client";
 import React, { useState } from "react";
 import { CheckCircle, Send } from "lucide-react";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
-);
 
 export default function ContactForm() {
   const [loading, setLoading] = useState(false);
   const [enviado, setEnviado] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
+    setErrorMsg("");
+    
     const formData = new FormData(e.currentTarget);
-    const { error } = await supabase.from("leads").insert([
-      {
-        nombre: formData.get("nombre"),
-        whatsapp: formData.get("whatsapp"),
-        email: formData.get("email"),
-        servicio: formData.get("servicio"),
-        mensaje: formData.get("mensaje"),
-      },
-    ]);
-    setLoading(false);
-    if (!error) setEnviado(true);
+    
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        if (response.status === 429) {
+          throw new Error("Has enviado demasiadas solicitudes. Por favor, intenta más tarde.");
+        }
+        throw new Error("Ocurrió un error al enviar el formulario.");
+      }
+
+      setEnviado(true);
+    } catch (err: any) {
+      setErrorMsg(err.message || "Error desconocido.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   const inputClass =
@@ -66,6 +72,15 @@ export default function ContactForm() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Honeypot field - invisible to users, bots will fill it */}
+                <input type="text" name="website_url" className="hidden" tabIndex={-1} autoComplete="off" />
+                
+                {errorMsg && (
+                  <div className="p-4 bg-rose-500/10 border border-rose-500/30 rounded-lg text-rose-500 font-bold mb-4">
+                    {errorMsg}
+                  </div>
+                )}
+                
                 <div>
                   <label htmlFor="nombre" className="block text-sm font-semibold text-foreground mb-2">
                     Nombre o Empresa
@@ -152,3 +167,4 @@ export default function ContactForm() {
     </section>
   );
 }
+

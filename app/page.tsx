@@ -8,13 +8,18 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 );
 
-export default function SafranSeguridad() {
+export default function SafraSeguridad() {
   const [loading, setLoading] = useState(false);
   const [enviado, setEnviado] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   // Alternar Modo Oscuro
   const toggleTheme = () => setDarkMode(!darkMode);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (darkMode) {
@@ -39,7 +44,11 @@ export default function SafranSeguridad() {
     if (!error) setEnviado(true);
   }
 
-  const inputStyle = "w-full p-4 rounded-xl border bg-white dark:bg-slate-800 text-slate-900 dark:text-white border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-blue-500 outline-none transition-all";
+  if (!mounted) {
+    return <div className="min-h-screen bg-slate-950" />;
+  }
+
+  const inputStyle = "w-full p-4 rounded-xl border bg-white dark:bg-slate-800 text-slate-900 dark:text-white border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 outline-none transition-all";
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300 font-sans">
@@ -47,7 +56,7 @@ export default function SafranSeguridad() {
       {/* Navbar */}
       <nav className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b dark:border-slate-800 p-4 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-black text-blue-700 dark:text-blue-400">SAFRAN <span className="font-light text-slate-500">SEGURIDAD</span></h1>
+          <h1 className="text-2xl font-black text-blue-700 dark:text-blue-400">SAFRA <span className="font-light text-slate-500">SEGURIDAD</span></h1>
           <div className="flex items-center gap-4">
             <button onClick={toggleTheme} className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 border dark:border-slate-700">
               {darkMode ? <Sun className="text-orange-400" /> : <Moon className="text-slate-500" />}
@@ -70,7 +79,7 @@ export default function SafranSeguridad() {
           <div>
             <h3 className="text-3xl font-bold mb-6 text-blue-700 dark:text-blue-400">Protegiendo lo que más valorás</h3>
             <p className="text-lg leading-relaxed text-slate-600 dark:text-slate-300 mb-6">
-              En <strong>Safran Seguridad</strong>, no solo instalamos dispositivos; diseñamos ecosistemas de protección integral. Con años de experiencia en el sector tecnológico, entendemos que la seguridad es la base de la libertad.
+              En <strong>Safra Seguridad</strong>, no solo instalamos dispositivos; diseñamos ecosistemas de protección integral. Con años de experiencia en el sector tecnológico, entendemos que la seguridad es la base de la libertad.
             </p>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
@@ -126,14 +135,14 @@ export default function SafranSeguridad() {
             <div className="text-center p-8 bg-green-50 dark:bg-green-900/20 rounded-2xl">
               <CheckCircle className="w-16 h-16 mx-auto mb-4 text-green-500" />
               <p className="text-xl font-bold text-green-800 dark:text-green-400">¡Mensaje enviado!</p>
-              <p>Un asesor de Safran Seguridad te contactará por WhatsApp.</p>
+              <p>Un asesor de Safra Seguridad te contactará por WhatsApp.</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
-              <input name="nombre" required placeholder="Tu nombre o empresa" className={inputStyle} />
+              <input name="nombre" required placeholder="Tu nombre o empresa" className={inputStyle} suppressHydrationWarning />
               <div className="grid md:grid-cols-2 gap-4">
-                <input name="whatsapp" required placeholder="WhatsApp" className={inputStyle} />
-                <input name="email" type="email" required placeholder="Email" className={inputStyle} />
+                <input name="whatsapp" required placeholder="WhatsApp" className={inputStyle} suppressHydrationWarning />
+                <input name="email" type="email" required placeholder="Email" className={inputStyle} suppressHydrationWarning />
               </div>
               <select name="servicio" className={inputStyle} required>
                 <option value="">Seleccioná un servicio...</option>
@@ -151,7 +160,7 @@ export default function SafranSeguridad() {
       </section>
 
       <footer className="py-10 text-center text-slate-500 border-t dark:border-slate-800">
-        <p>© 2024 Safran Seguridad - Tecnología y Protección.</p>
+        <p>© 2024 Safra Seguridad - Tecnología y Protección.</p>
       </footer>
     </div>
   );

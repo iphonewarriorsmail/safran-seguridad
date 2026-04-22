@@ -69,7 +69,7 @@ export default function Footer() {
                 "Asesoramiento Técnico",
               ].map((s) => (
                 <li key={s}>
-                  <a href="#servicios" className="text-sm text-muted hover:text-accent transition-colors">
+                  <a href="/#servicios" className="text-sm text-muted hover:text-accent transition-colors">
                     {s}
                   </a>
                 </li>

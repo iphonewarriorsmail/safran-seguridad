@@ -37,11 +37,11 @@ export async function POST(request: NextRequest) {
     }
 
     const data = {
-      nombre: formData.get('nombre'),
+      name: formData.get('name'),
       whatsapp: formData.get('whatsapp'),
       email: formData.get('email'),
-      servicio: formData.get('servicio'),
-      mensaje: formData.get('mensaje'),
+      service: formData.get('service'),
+      message: formData.get('message'),
     }
 
     const supabase = await createClient()

@@ -28,10 +28,10 @@ export default function Navbar() {
   }, [darkMode]);
 
   const navLinks = [
-    { href: "#servicios", label: "Servicios" },
-    { href: "#nosotros", label: "Nosotros" },
-    { href: "#blog", label: "Blog" },
-    { href: "#contacto", label: "Contacto" },
+    { href: "/#servicios", label: "Servicios" },
+    { href: "/#nosotros", label: "Nosotros" },
+    { href: "/#blog", label: "Blog" },
+    { href: "/#contacto", label: "Contacto" },
   ];
 
   return (
@@ -45,7 +45,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center h-16 md:h-20">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2 group">
+          <a href="/" className="flex items-center gap-2 group">
             <Shield className="w-8 h-8 text-accent transition-transform group-hover:scale-110" />
             <div>
               <span className="text-xl font-black tracking-tight text-foreground">
@@ -80,7 +80,7 @@ export default function Navbar() {
               )}
             </button>
             <a
-              href="#contacto"
+              href="/#contacto"
               className="btn-primary text-sm !py-2.5 !px-5"
             >
               Solicitar Presupuesto
@@ -128,7 +128,7 @@ export default function Navbar() {
               </a>
             ))}
             <a
-              href="#contacto"
+              href="/#contacto"
               onClick={() => setMenuOpen(false)}
               className="btn-primary text-sm text-center !py-2.5"
             >

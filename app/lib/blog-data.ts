@@ -14,6 +14,7 @@ export interface BlogPost {
   content: string;
 }
 
+/*
 export const blogPosts: BlogPost[] = [
   {
     id: "asegurar-pyme-argentina",
@@ -166,6 +167,8 @@ Imágenes nítidas incluso en oscuridad total gracias a sensores de gran tamaño
 Ante una alarma, la central puede verificar visualmente antes de despachar una patrulla, reduciendo falsas alarmas y tiempos de respuesta.`,
   },
 ];
+*/
+
 
 // Categorías para los badges del blog
 export const categoryLabels: Record<BlogPost["category"], string> = {

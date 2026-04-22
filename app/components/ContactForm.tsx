@@ -82,12 +82,12 @@ export default function ContactForm() {
                 )}
                 
                 <div>
-                  <label htmlFor="nombre" className="block text-sm font-semibold text-foreground mb-2">
+                  <label htmlFor="name" className="block text-sm font-semibold text-foreground mb-2">
                     Nombre o Empresa
                   </label>
                   <input
-                    id="nombre"
-                    name="nombre"
+                    id="name"
+                    name="name"
                     required
                     placeholder="Ej: Juan Pérez / Consorcio Belgrano 1234"
                     className={inputClass}
@@ -121,10 +121,10 @@ export default function ContactForm() {
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="servicio" className="block text-sm font-semibold text-foreground mb-2">
+                  <label htmlFor="service" className="block text-sm font-semibold text-foreground mb-2">
                     Servicio de Interés
                   </label>
-                  <select id="servicio" name="servicio" className={inputClass} required>
+                  <select id="service" name="service" className={inputClass} required>
                     <option value="">Seleccioná un servicio...</option>
                     <option value="camaras">Cámaras de Seguridad</option>
                     <option value="alarma">Alarmas Monitoreadas</option>
@@ -134,12 +134,12 @@ export default function ContactForm() {
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="mensaje" className="block text-sm font-semibold text-foreground mb-2">
+                  <label htmlFor="message" className="block text-sm font-semibold text-foreground mb-2">
                     Mensaje
                   </label>
                   <textarea
-                    id="mensaje"
-                    name="mensaje"
+                    id="message"
+                    name="message"
                     placeholder="Contanos qué necesitás: cantidad de cámaras, tipo de propiedad, etc."
                     rows={4}
                     className={inputClass}

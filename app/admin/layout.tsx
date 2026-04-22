@@ -35,7 +35,7 @@ export default async function AdminLayout({
               className="flex items-center gap-3 px-4 py-2 rounded-lg text-muted hover:text-foreground hover:bg-surface-hover transition-colors"
             >
               <FileText className="w-5 h-5" />
-              Artículos
+              Blog
             </Link>
             <Link
               href="/admin/calculator"

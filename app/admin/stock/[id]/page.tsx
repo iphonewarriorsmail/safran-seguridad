@@ -5,7 +5,11 @@ import { notFound } from 'next/navigation'
 export default async function EditStockPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
-  const { data: item, error } = await supabase.from('stock_items').select('*').eq('id', id).single()
+  const { data: item, error } = await supabase
+    .from('stock_items')
+    .select('*, brands(name), categories(name)')
+    .eq('id', id)
+    .single()
 
   if (error || !item) {
     notFound()

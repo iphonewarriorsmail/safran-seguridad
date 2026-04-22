@@ -1,40 +1,52 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { saveStockItem } from '../actions'
+import { saveStockItem, getStockFormData } from '../actions'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 
 export default function StockForm({ item }: { item?: any }) {
-  const [precioStock, setPrecioStock] = useState<number>(item?.precio_stock || 0)
-  const [precioVenta, setPrecioVenta] = useState<number>(item?.precio_venta || 0)
-  const [margen, setMargen] = useState<number>(item?.margen || 0)
+  const [costPrice, setCostPrice] = useState<number>(item?.cost_price || 0)
+  const [salePrice, setSalePrice] = useState<number>(item?.sale_price || 0)
+  const [margin, setMargin] = useState<number>(item?.margin || 0)
+  
+  const [availableBrands, setAvailableBrands] = useState<{id: number, name: string}[]>([])
+  const [availableCategories, setAvailableCategories] = useState<{id: number, name: string}[]>([])
+
+  useEffect(() => {
+    async function loadData() {
+      const { brands, categories } = await getStockFormData()
+      setAvailableBrands(brands)
+      setAvailableCategories(categories)
+    }
+    loadData()
+  }, [])
 
   // Handlers para cálculo bidireccional
-  const handlePrecioVentaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSalePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseFloat(e.target.value) || 0
-    setPrecioVenta(val)
-    if (precioStock > 0) {
-      const nuevoMargen = Math.round(((val - precioStock) / precioStock) * 100)
-      setMargen(nuevoMargen)
+    setSalePrice(val)
+    if (costPrice > 0) {
+      const newMargin = Math.round(((val - costPrice) / costPrice) * 100)
+      setMargin(newMargin)
     }
   }
 
-  const handleMargenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMarginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseFloat(e.target.value) || 0
-    setMargen(val)
-    if (precioStock > 0) {
-      const nuevoVenta = Math.round(precioStock * (1 + val / 100))
-      setPrecioVenta(nuevoVenta)
+    setMargin(val)
+    if (costPrice > 0) {
+      const newSale = Math.round(costPrice * (1 + val / 100))
+      setSalePrice(newSale)
     }
   }
 
-  const handlePrecioStockChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCostPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseFloat(e.target.value) || 0
-    setPrecioStock(val)
+    setCostPrice(val)
     // Al cambiar el precio de stock, mantenemos el margen actual y recalculamos precio de venta
-    const nuevoVenta = Math.round(val * (1 + margen / 100))
-    setPrecioVenta(nuevoVenta)
+    const newSale = Math.round(val * (1 + margin / 100))
+    setSalePrice(newSale)
   }
 
   return (
@@ -53,28 +65,35 @@ export default function StockForm({ item }: { item?: any }) {
         <div className="grid md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium mb-1">Categoría</label>
-            <select 
+            <input 
+              list="categories-list"
               name="category" 
-              defaultValue={item?.category || 'Cámaras'} 
+              defaultValue={item?.categories?.name || item?.category || ''} 
+              placeholder="Seleccioná o escribí una categoría"
               className="w-full bg-background border border-border rounded-lg px-4 py-2 focus:border-accent outline-none"
-            >
-              <option value="Cámaras">Cámaras</option>
-              <option value="Alarmas">Alarmas</option>
-              <option value="Accesorios">Accesorios</option>
-              <option value="Cables">Cables</option>
-              <option value="Herramientas">Herramientas</option>
-            </select>
+            />
+            <datalist id="categories-list">
+              {availableCategories.map(cat => (
+                <option key={cat.id} value={cat.name} />
+              ))}
+            </datalist>
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Marca</label>
             <input 
+              list="brands-list"
               type="text" 
-              name="marca" 
-              defaultValue={item?.marca || ''} 
+              name="brand" 
+              defaultValue={item?.brands?.name || item?.brand || ''} 
               required 
               placeholder="Ej: Hikvision, Dahua..."
               className="w-full bg-background border border-border rounded-lg px-4 py-2 focus:border-accent outline-none"
             />
+            <datalist id="brands-list">
+              {availableBrands.map(brand => (
+                <option key={brand.id} value={brand.name} />
+              ))}
+            </datalist>
           </div>
         </div>
 
@@ -82,8 +101,8 @@ export default function StockForm({ item }: { item?: any }) {
           <label className="block text-sm font-medium mb-1">Modelo</label>
           <input 
             type="text" 
-            name="modelo" 
-            defaultValue={item?.modelo || ''} 
+            name="model" 
+            defaultValue={item?.model || ''} 
             required 
             placeholder="Ej: DS-2CE56D0T-IRPF"
             className="w-full bg-background border border-border rounded-lg px-4 py-2 focus:border-accent outline-none"
@@ -94,8 +113,8 @@ export default function StockForm({ item }: { item?: any }) {
           <label className="block text-sm font-medium mb-1">Descripción Corta</label>
           <input 
             type="text" 
-            name="descripcion" 
-            defaultValue={item?.descripcion || ''} 
+            name="description" 
+            defaultValue={item?.description || ''} 
             required 
             placeholder="Cámara Domo Interior 2MP..."
             className="w-full bg-background border border-border rounded-lg px-4 py-2 focus:border-accent outline-none"
@@ -107,9 +126,9 @@ export default function StockForm({ item }: { item?: any }) {
             <label className="block text-sm font-bold text-muted mb-1">Precio Stock ($)</label>
             <input 
               type="number" 
-              name="precio_stock" 
-              value={precioStock || ''} 
-              onChange={handlePrecioStockChange}
+              name="cost_price" 
+              value={costPrice || ''} 
+              onChange={handleCostPriceChange}
               required 
               min="0"
               className="w-full bg-background border border-border rounded-lg px-4 py-2 focus:border-accent outline-none"
@@ -119,9 +138,9 @@ export default function StockForm({ item }: { item?: any }) {
             <label className="block text-sm font-bold text-accent mb-1">Precio Venta ($)</label>
             <input 
               type="number" 
-              name="precio_venta" 
-              value={precioVenta || ''} 
-              onChange={handlePrecioVentaChange}
+              name="sale_price" 
+              value={salePrice || ''} 
+              onChange={handleSalePriceChange}
               required 
               min="0"
               className="w-full bg-background border border-accent/50 rounded-lg px-4 py-2 focus:border-accent outline-none"
@@ -131,8 +150,8 @@ export default function StockForm({ item }: { item?: any }) {
             <label className="block text-sm font-bold text-emerald-500 mb-1">Margen (%)</label>
             <input 
               type="number" 
-              value={margen || ''} 
-              onChange={handleMargenChange}
+              value={margin || ''} 
+              onChange={handleMarginChange}
               className="w-full bg-background border border-emerald-500/50 rounded-lg px-4 py-2 focus:border-emerald-500 outline-none text-emerald-500 font-bold"
             />
           </div>
@@ -142,8 +161,8 @@ export default function StockForm({ item }: { item?: any }) {
           <label className="block text-sm font-medium mb-1">Cantidad en Stock</label>
           <input 
             type="number" 
-            name="cantidad" 
-            defaultValue={item?.cantidad || 0} 
+            name="quantity" 
+            defaultValue={item?.quantity || 0} 
             required 
             min="0"
             className="w-full md:w-1/3 bg-background border border-border rounded-lg px-4 py-2 focus:border-accent outline-none"

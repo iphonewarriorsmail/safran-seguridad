@@ -10,9 +10,9 @@ export default async function AdminBlogPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-black">Artículos del Blog</h1>
+        <h1 className="text-3xl font-black">Blog</h1>
         <Link href="/admin/blog/new" className="bg-accent text-accent-foreground font-bold rounded-lg px-4 py-2 flex items-center gap-2 hover:opacity-90">
-          <Plus className="w-4 h-4" /> Nuevo Artículo
+          <Plus className="w-4 h-4" /> Nuevo Post
         </Link>
       </div>
 

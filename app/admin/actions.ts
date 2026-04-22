@@ -11,6 +11,6 @@ export async function markLeadAsRead(id: string, currentStatus: boolean) {
     throw new Error('No autorizado')
   }
 
-  await supabase.from('leads').update({ leida: !currentStatus }).eq('id', id)
+  await supabase.from('leads').update({ is_read: !currentStatus }).eq('id', id)
   revalidatePath('/admin')
 }

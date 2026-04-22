@@ -5,13 +5,19 @@ import { deleteStockItem } from './actions'
 
 export default async function AdminStockPage() {
   const supabase = await createClient()
-  const { data: stockItems, error } = await supabase.from('stock_items').select('*').order('category', { ascending: true }).order('marca', { ascending: true })
+  const { data: stockItems, error } = await supabase
+    .from('stock_items')
+    .select('*, brands(name), categories(name)')
+    .order('model', { ascending: true })
 
   // Agrupar por Categoría y luego por Marca
   const groupedStock = stockItems?.reduce((acc: any, item: any) => {
-    if (!acc[item.category]) acc[item.category] = {}
-    if (!acc[item.category][item.marca]) acc[item.category][item.marca] = []
-    acc[item.category][item.marca].push(item)
+    const categoryName = item.categories?.name || 'Sin Categoría'
+    const brandName = item.brands?.name || 'Sin Marca'
+    
+    if (!acc[categoryName]) acc[categoryName] = {}
+    if (!acc[categoryName][brandName]) acc[categoryName][brandName] = []
+    acc[categoryName][brandName].push(item)
     return acc
   }, {})
 
@@ -35,7 +41,7 @@ export default async function AdminStockPage() {
             Si la tabla existe, verifica que:
             <br />1. Tenga habilitado RLS (Row Level Security) y haya políticas de SELECT permitidas.
             <br />2. El nombre de la tabla sea exactamente `stock_items`.
-            <br />3. Existan las columnas `category` y `marca`.
+            <br />3. Existan las columnas `category` y `brand`.
           </p>
         </div>
       ) : groupedStock && Object.keys(groupedStock).length > 0 ? (
@@ -48,10 +54,10 @@ export default async function AdminStockPage() {
               </div>
               
               <div className="p-0">
-                {Object.entries(brands).map(([marca, items]: [string, any]) => (
-                  <div key={marca} className="border-b border-border last:border-0">
+                {Object.entries(brands).map(([brand, items]: [string, any]) => (
+                  <div key={brand} className="border-b border-border last:border-0">
                     <div className="bg-surface-hover/50 px-6 py-2 border-b border-border">
-                      <span className="font-bold text-sm text-muted uppercase">{marca}</span>
+                      <span className="font-bold text-sm text-muted uppercase">{brand}</span>
                     </div>
                     <table className="w-full text-left text-sm">
                       <thead className="text-muted hidden md:table-header-group">
@@ -68,15 +74,15 @@ export default async function AdminStockPage() {
                         {items.map((item: any) => (
                           <tr key={item.id} className="hover:bg-surface-hover/30 transition-colors">
                             <td className="p-4">
-                              <p className="font-bold">{item.modelo}</p>
-                              <p className="text-xs text-muted truncate max-w-[200px]">{item.descripcion}</p>
+                              <p className="font-bold">{item.model}</p>
+                              <p className="text-xs text-muted truncate max-w-[200px]">{item.description}</p>
                             </td>
-                            <td className="p-4 text-muted">${Number(item.precio_stock).toLocaleString()}</td>
-                            <td className="p-4 font-bold text-accent">${Number(item.precio_venta).toLocaleString()}</td>
-                            <td className="p-4 text-emerald-400 font-medium">{item.margen}%</td>
+                            <td className="p-4 text-muted">${Number(item.cost_price).toLocaleString()}</td>
+                            <td className="p-4 font-bold text-accent">${Number(item.sale_price).toLocaleString()}</td>
+                            <td className="p-4 text-emerald-400 font-medium">{item.margin}%</td>
                             <td className="p-4 text-center">
-                              <span className={`px-2 py-1 rounded-full text-xs font-bold ${item.cantidad > 5 ? 'bg-emerald-500/10 text-emerald-500' : item.cantidad > 0 ? 'bg-amber-500/10 text-amber-500' : 'bg-rose-500/10 text-rose-500'}`}>
-                                {item.cantidad}
+                              <span className={`px-2 py-1 rounded-full text-xs font-bold ${item.quantity > 5 ? 'bg-emerald-500/10 text-emerald-500' : item.quantity > 0 ? 'bg-amber-500/10 text-amber-500' : 'bg-rose-500/10 text-rose-500'}`}>
+                                {item.quantity}
                               </span>
                             </td>
                             <td className="p-4 flex justify-end gap-2">

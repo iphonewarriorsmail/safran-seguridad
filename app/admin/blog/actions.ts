@@ -6,12 +6,23 @@ import { redirect } from 'next/navigation'
 
 export async function deletePost(id: string) {
   const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    throw new Error('No autorizado')
+  }
+
   await supabase.from('blog_posts').delete().eq('id', id)
   revalidatePath('/admin/blog')
 }
 
 export async function savePost(formData: FormData) {
   const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    throw new Error('No autorizado')
+  }
   
   const post = {
     title: formData.get('title') as string,

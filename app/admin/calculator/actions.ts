@@ -6,6 +6,12 @@ import { redirect } from 'next/navigation'
 
 export async function deleteCalculatorItem(id: string) {
   const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    throw new Error('No autorizado')
+  }
+
   await supabase.from('calculator_items').delete().eq('id', id)
   revalidatePath('/admin/calculator')
   revalidatePath('/calculadora')
@@ -13,6 +19,11 @@ export async function deleteCalculatorItem(id: string) {
 
 export async function saveCalculatorItem(formData: FormData) {
   const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    throw new Error('No autorizado')
+  }
   
   const id = formData.get('id') as string
 

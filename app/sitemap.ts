@@ -1,4 +1,4 @@
-import { MetadataRoute } from 'next';
+/*import { MetadataRoute } from 'next';
 import { blogPosts } from './lib/blog-data';
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -21,3 +21,4 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...blogEntries,
   ];
 }
+*/

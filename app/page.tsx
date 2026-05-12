@@ -4,6 +4,7 @@ import Services from "./components/Services";
 import Clients from "./components/Clients";
 import About from "./components/About";
 import Blog from "./components/Blog";
+import FaqSection from "./components/FaqSection";
 import ContactForm from "./components/ContactForm";
 import Footer from "./components/Footer";
 import WhatsAppButton from "./components/WhatsAppButton";
@@ -16,6 +17,7 @@ export default function SafraSeguridad() {
       <Services />
       <Clients />
       <About />
+      <FaqSection />
       <Blog />
       <ContactForm />
       <Footer />
@@ -23,3 +25,4 @@ export default function SafraSeguridad() {
     </div>
   );
 }
+

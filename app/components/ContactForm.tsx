@@ -1,32 +1,38 @@
 "use client";
 import React, { useState } from "react";
 import { CheckCircle, Send } from "lucide-react";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
-);
 
 export default function ContactForm() {
   const [loading, setLoading] = useState(false);
   const [enviado, setEnviado] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
+    setErrorMsg("");
+    
     const formData = new FormData(e.currentTarget);
-    const { error } = await supabase.from("leads").insert([
-      {
-        nombre: formData.get("nombre"),
-        whatsapp: formData.get("whatsapp"),
-        email: formData.get("email"),
-        servicio: formData.get("servicio"),
-        mensaje: formData.get("mensaje"),
-      },
-    ]);
-    setLoading(false);
-    if (!error) setEnviado(true);
+    
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        if (response.status === 429) {
+          throw new Error("Has enviado demasiadas solicitudes. Por favor, intenta más tarde.");
+        }
+        throw new Error("Ocurrió un error al enviar el formulario.");
+      }
+
+      setEnviado(true);
+    } catch (err: any) {
+      setErrorMsg(err.message || "Error desconocido.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   const inputClass =
@@ -66,13 +72,22 @@ export default function ContactForm() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
+                {/* Honeypot field - invisible to users, bots will fill it */}
+                <input type="text" name="website_url" className="hidden" tabIndex={-1} autoComplete="off" />
+                
+                {errorMsg && (
+                  <div className="p-4 bg-rose-500/10 border border-rose-500/30 rounded-lg text-rose-500 font-bold mb-4">
+                    {errorMsg}
+                  </div>
+                )}
+                
                 <div>
-                  <label htmlFor="nombre" className="block text-sm font-semibold text-foreground mb-2">
+                  <label htmlFor="name" className="block text-sm font-semibold text-foreground mb-2">
                     Nombre o Empresa
                   </label>
                   <input
-                    id="nombre"
-                    name="nombre"
+                    id="name"
+                    name="name"
                     required
                     placeholder="Ej: Juan Pérez / Consorcio Belgrano 1234"
                     className={inputClass}
@@ -106,10 +121,10 @@ export default function ContactForm() {
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="servicio" className="block text-sm font-semibold text-foreground mb-2">
+                  <label htmlFor="service" className="block text-sm font-semibold text-foreground mb-2">
                     Servicio de Interés
                   </label>
-                  <select id="servicio" name="servicio" className={inputClass} required>
+                  <select id="service" name="service" className={inputClass} required>
                     <option value="">Seleccioná un servicio...</option>
                     <option value="camaras">Cámaras de Seguridad</option>
                     <option value="alarma">Alarmas Monitoreadas</option>
@@ -119,12 +134,12 @@ export default function ContactForm() {
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="mensaje" className="block text-sm font-semibold text-foreground mb-2">
+                  <label htmlFor="message" className="block text-sm font-semibold text-foreground mb-2">
                     Mensaje
                   </label>
                   <textarea
-                    id="mensaje"
-                    name="mensaje"
+                    id="message"
+                    name="message"
                     placeholder="Contanos qué necesitás: cantidad de cámaras, tipo de propiedad, etc."
                     rows={4}
                     className={inputClass}
@@ -152,3 +167,4 @@ export default function ContactForm() {
     </section>
   );
 }
+
